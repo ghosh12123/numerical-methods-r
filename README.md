@@ -4,7 +4,14 @@ An R package implementing classical numerical algorithms for root-finding and op
 
 ## Overview
 
-This package provides implementations of fundamental numerical methods commonly taught in computational statistics and numerical analysis courses. Each algorithm includes detailed iteration history tracking, convergence rate classification, and animated visualizations to help understand how the methods work.
+Root-finding and optimization are fundamental problems in computational statistics and scientific computing. Whether estimating maximum likelihood parameters, solving nonlinear equations in simulations, or finding optimal model configurations, these numerical methods form the backbone of many statistical applications.
+
+This package provides implementations of classical numerical algorithms with a focus on education and visualization. Unlike base R's `uniroot()` or `optimize()` which only return final answers, this package tracks the entire iteration history, classifies convergence rates, and provides animated visualizations showing exactly how each algorithm approaches the solution. This makes it useful for:
+
+- **Learning**: Understanding how algorithms like Newton-Raphson or Brent's method actually work step-by-step
+- **Teaching**: Demonstrating algorithm behavior with interactive visualizations
+- **Comparison**: Seeing how different methods perform on the same problem
+- **Debugging**: Diagnosing convergence issues by examining iteration history
 
 **Key Features:**
 - 4 root-finding algorithms (Bisection, Newton-Raphson, Secant, Fixed-Point)
@@ -52,6 +59,36 @@ remotes::install_local("path/to/NumericalMethods")
 
 ```r
 library(NumericalMethods)
+```
+
+## Quick Start Example
+
+A complete workflow showing root-finding analysis:
+
+```r
+library(NumericalMethods)
+
+# Define function: find where x^3 - 2x - 5 = 0
+f <- function(x) x^3 - 2*x - 5
+
+# Run all algorithms and compare
+results <- solve_root(f, initial = c(1, 3))
+comparison <- compare_all_methods(f, "root", c(1, 3))
+print(comparison)
+
+# Plot convergence comparison
+plot_comparison(results)
+
+# Analyze best performer (Newton-Raphson)
+newton_result <- results$newton
+print(newton_result$history)
+plot_convergence(newton_result)
+
+# View animated visualization
+plot_newton_animation(newton_result, f)
+
+# Launch interactive dashboard for exploration
+run_shiny_app()
 ```
 
 ## Example Usage
@@ -210,7 +247,7 @@ The interactive dashboard provides:
 ### Input Panel
 - **Problem Type:** Toggle between Root-Finding and Minimization
 - **Custom Function:** Enter any function of x (e.g., `x^3 - 2*x - 5`, `sin(x) - x/2`, `exp(-x) - x`)
-- **Interval:** Set search bounds [a, b]
+- **Interval:** Set search bounds [a, b] / initial gusses (x0,x1)
 - **Tolerance:** Convergence tolerance (default: 1e-6)
 - **Max Iterations:** Iteration limit (default: 100)
 
@@ -290,3 +327,4 @@ Ishan Ghosh
 ## Acknowledgments
 
 Developed as part of Biostat 615 coursework on numerical methods and computational statistics.
+
