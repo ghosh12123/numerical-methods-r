@@ -1,0 +1,24 @@
+Package: NumericalMethods
+Type: Package
+Title: Numerical Methods for Root Finding and Optimization
+Version: 1.0.0
+Authors@R: 
+    person("Ishan", "Ghosh", 
+           email = "ghosh12123@gmail.com", 
+           role = c("aut", "cre"))
+Description: Tools for root-finding and minimization with visualization and Shiny app.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 4.0.0)
+Imports:
+    ggplot2,
+    dplyr,
+    gridExtra,
+    shiny,
+    shinydashboard,
+    plotly,
+    DT
+LazyData: true
