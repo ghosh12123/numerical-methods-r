@@ -168,12 +168,12 @@ parabolic_interpolation <- function(f, interval, tol = 1e-6, max_iter = 100) {
     f2 <- f(x2)
     f3 <- f(x3)
     
-    # Compute parabola minimum using direct formula
-    numerator <- (x1 - x2)^2 * (f2 - f3) - (x1 - x3)^2 * (f2 - f1)
-    denominator <- 2 * ((x1 - x2) * (f1 - f3) - (x1 - x3) * (f1 - f2))
+    # Compute parabola minimum - standard formula
+    num <- (x2 - x1)^2 * (f2 - f3) - (x2 - x3)^2 * (f2 - f1)
+    den <- (x2 - x1) * (f2 - f3) - (x2 - x3) * (f2 - f1)
     
     # Compute trial point
-    if (abs(denominator) < 1e-12) {
+    if (abs(den) < 1e-12) {
       # Fallback to golden section if parabola is degenerate
       if ((x3 - x2) > (x2 - x1)) {
         x_new <- x2 + resphi * (x3 - x2)
@@ -181,7 +181,7 @@ parabolic_interpolation <- function(f, interval, tol = 1e-6, max_iter = 100) {
         x_new <- x2 - resphi * (x2 - x1)
       }
     } else {
-      x_new <- x2 - 0.5 * numerator / denominator
+      x_new <- x2 - 0.5 * num / den
       
       # Fallback if trial point is outside bracket
       if (x_new <= x1 || x_new >= x3) {
@@ -195,10 +195,10 @@ parabolic_interpolation <- function(f, interval, tol = 1e-6, max_iter = 100) {
     
     f_new <- f(x_new)
     
-    # Check convergence
-    if (abs(x_new - x2) < tol) {
-      x_final <- ifelse(f_new < f2, x_new, x2)
-      f_final <- min(f_new, f2)
+    # Check convergence - interval width
+    if ((x3 - x1) < tol) {
+      x_final <- x2
+      f_final <- f2
       
       return(list(
         algorithm = "Parabolic Interpolation",
@@ -424,4 +424,5 @@ brent_method <- function(f, interval, tol = 1e-6, max_iter = 100) {
     history = history,
     convergence_rate = "Superlinear"
   )
+
 }
