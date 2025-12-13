@@ -8,6 +8,25 @@ function(input, output, session) {
   # Reactive values to store results
   results_data <- reactiveVal(NULL)
   
+  # Update function and placeholder when problem type changes
+  observeEvent(input$problem_type, {
+    if (input$problem_type == "minimize") {
+      updateTextInput(
+        session = session, 
+        inputId = "custom_function", 
+        value = "",
+        placeholder = "e.g., x^4 - 3*x^2 + 5"
+      )
+    } else {
+      updateTextInput(
+        session = session, 
+        inputId = "custom_function", 
+        value = "",
+        placeholder = "e.g., x + cos(x)"
+      )
+    }
+  }, ignoreInit = TRUE)
+  
   # Get function based on selection
   get_function <- reactive({
     
@@ -143,8 +162,8 @@ function(input, output, session) {
       
       # Update algorithm selector
       updateSelectInput(session, "selected_algorithm",
-                       choices = names(results),
-                       selected = names(results)[1])
+                        choices = names(results),
+                        selected = names(results)[1])
       
       # Show "Complete" with checkmark
       output$status_message <- renderText({
@@ -409,19 +428,33 @@ function(input, output, session) {
       return(NULL)
     }
     
+    # Start with points (always visible, even for 1 iteration)
     p <- ggplot(history_combined, aes(x = iteration, y = abs(f_x), 
                                       color = algorithm, group = algorithm)) +
-      geom_line(size = 1) +
-      geom_point(size = 2) +
-      scale_y_log10() +
+      geom_point(size = 3) +
       facet_wrap(~ algorithm, scales = "free_x", ncol = 2) +
       theme_minimal() +
-      theme(legend.position = "none") +  # Remove legend since facet labels show algorithm names
+      theme(legend.position = "none") +
       labs(
         title = "Function Value Convergence (Each Algorithm on Own Scale)",
         x = "Iteration",
         y = "|f(x)| (log scale)"
       )
+    
+    # Only add lines for algorithms with more than 1 point
+    algorithms_with_multiple <- history_combined %>%
+      dplyr::group_by(algorithm) %>%
+      dplyr::filter(dplyr::n() > 1) %>%
+      dplyr::ungroup()
+    
+    if (nrow(algorithms_with_multiple) > 0) {
+      p <- p + geom_line(data = algorithms_with_multiple, size = 1)
+    }
+    
+    # Only use log scale if all values are positive
+    if (all(abs(history_combined$f_x) > 0, na.rm = TRUE)) {
+      p <- p + scale_y_log10()
+    }
     
     ggplotly(p)
   })
