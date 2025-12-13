@@ -28,7 +28,16 @@ solve_root <- function(f, initial, methods = "all", tol = 1e-6, max_iter = 100) 
       tryCatch({
         results$bisection <- bisection_method(f, initial, tol, max_iter)
       }, error = function(e) {
-        warning("Bisection failed: ", e$message)
+        results$bisection <<- list(
+          algorithm = "Bisection",
+          converged = FALSE,
+          message = paste("Error:", e$message),
+          x_final = NA,
+          f_final = NA,
+          iterations = 0,
+          history = data.frame(iteration = integer(), x = numeric(), f_x = numeric()),
+          convergence_rate = "N/A"
+        )
       })
     }
   }
@@ -39,7 +48,16 @@ solve_root <- function(f, initial, methods = "all", tol = 1e-6, max_iter = 100) 
       x0 <- if (length(initial) == 2) mean(initial) else initial
       results$newton <- newton_raphson(f, x0, tol, max_iter)
     }, error = function(e) {
-      warning("Newton-Raphson failed: ", e$message)
+      results$newton <<- list(
+        algorithm = "Newton-Raphson",
+        converged = FALSE,
+        message = paste("Error:", e$message),
+        x_final = NA,
+        f_final = NA,
+        iterations = 0,
+        history = data.frame(iteration = integer(), x = numeric(), f_x = numeric()),
+        convergence_rate = "N/A"
+      )
     })
   }
   
@@ -52,7 +70,16 @@ solve_root <- function(f, initial, methods = "all", tol = 1e-6, max_iter = 100) 
         results$secant <- secant_method(f, initial, initial + 0.1, tol, max_iter)
       }
     }, error = function(e) {
-      warning("Secant failed: ", e$message)
+      results$secant <<- list(
+        algorithm = "Secant",
+        converged = FALSE,
+        message = paste("Error:", e$message),
+        x_final = NA,
+        f_final = NA,
+        iterations = 0,
+        history = data.frame(iteration = integer(), x = numeric(), f_x = numeric()),
+        convergence_rate = "N/A"
+      )
     })
   }
   
@@ -62,7 +89,16 @@ solve_root <- function(f, initial, methods = "all", tol = 1e-6, max_iter = 100) 
       x0 <- if (length(initial) == 2) mean(initial) else initial
       results$fixed_point <- fixed_point_iteration(f, x0, tol, max_iter)
     }, error = function(e) {
-      warning("Fixed-Point failed: ", e$message)
+      results$fixed_point <<- list(
+        algorithm = "Fixed-Point Iteration",
+        converged = FALSE,
+        message = paste("Error:", e$message),
+        x_final = NA,
+        f_final = NA,
+        iterations = 0,
+        history = data.frame(iteration = integer(), x = numeric(), f_x = numeric()),
+        convergence_rate = "N/A"
+      )
     })
   }
   
