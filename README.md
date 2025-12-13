@@ -53,6 +53,10 @@ install.packages(c("shiny", "shinydashboard", "ggplot2", "plotly",
 ### Install from Local Source
 
 ```r
+# Make sure devtools is installed
+install.packages("devtools")
+library(devtools)
+
 # Install directly from GitHub
 # When prompted to update packages, press Enter to skip updates
 devtools::install_github("ghosh12123/numerical-methods-r')
@@ -320,6 +324,7 @@ MIT License
 ## Author
 
 Ishan Ghosh
+
 
 
 
