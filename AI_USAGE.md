@@ -357,21 +357,6 @@ the other algorithms."
 
 ---
 
-## Code Ownership
-
-The final code represents **my understanding** of the numerical methods. AI assistance was used as a tool for:
-- Rapid prototyping
-- Syntax help (especially ggplot2/plotly)
-- Debugging complex issues
-
-All code was:
-- Reviewed line-by-line
-- Tested with multiple test cases
-- Modified when AI suggestions were wrong
-- Understood before inclusion in final package
-
----
-
 ## Conclusion
 
 AI was invaluable for this project, particularly for:
@@ -384,4 +369,4 @@ However, AI **required constant supervision**:
 - Suggestions sometimes contradicted earlier advice
 - Design decisions still needed human judgment
 
-**Overall**: AI was a powerful assistant that accelerated development, but it wasn't autopilot - it required careful direction, testing, and verification at every step.
+**Overall**: AI was a powerful assistant that accelerated development, however it required careful direction, testing, and verification at every step.
