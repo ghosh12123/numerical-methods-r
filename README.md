@@ -48,11 +48,9 @@ install.packages(c("shiny", "shinydashboard", "ggplot2", "plotly",
 ### Install from Local Source
 
 ```r
-# Option 1: Using devtools
-devtools::install("path/to/NumericalMethods")
-
-# Option 2: Using remotes
-remotes::install_local("path/to/NumericalMethods")
+# Install directly from GitHub
+# When prompted to update packages, press Enter to skip updates
+devtools::install_github("ghosh12123/numerical-methods-r')
 ```
 
 ### Load the Package
@@ -321,5 +319,6 @@ Ishan Ghosh
 ## Acknowledgments
 
 Developed as part of Biostat 615 coursework on numerical methods and computational statistics.
+
 
 
