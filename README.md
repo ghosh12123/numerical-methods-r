@@ -321,11 +321,6 @@ MIT License
 
 Ishan Ghosh
 
-## Acknowledgments
-
-Developed as part of Biostat 615 coursework on numerical methods and computational statistics.
-
-
 
 
 
