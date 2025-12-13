@@ -1,5 +1,6 @@
 **Live Interactive Shiny App:**  
 [https://ishang.shinyapps.io/numerical-methods-explorer/](https://ishang.shinyapps.io/shiny/)
+
 *Note:* The hosted Shiny app may take a few moments to render plots and animations due to server resource constraints. For faster performance and smoother interactivity, running the app locally via the package (`run_shiny_app()`) is recommended.
 
 # NumericalMethods
@@ -323,6 +324,7 @@ Ishan Ghosh
 ## Acknowledgments
 
 Developed as part of Biostat 615 coursework on numerical methods and computational statistics.
+
 
 
 
