@@ -64,13 +64,13 @@ dashboardPage(
             status = "primary",
             
             radioButtons("problem_type", "Problem Type:",
-                        choices = c("Root-Finding" = "root", 
-                                  "Minimization" = "minimize"),
-                        selected = "root"),
+                         choices = c("Root-Finding" = "root", 
+                                     "Minimization" = "minimize"),
+                         selected = "root"),
             
             textInput("custom_function", "Function f(x):", 
-                     value = "x^2 - 4",
-                     placeholder = "e.g., x^2 - 4")
+                      value = "",
+                      placeholder = "e.g., x + cos(x)")
           ),
           
           box(
@@ -80,16 +80,16 @@ dashboardPage(
             status = "info",
             
             numericInput("interval_a", "Interval/Guess a:",
-                        value = 1, step = 0.1),
+                         value = -2, step = 0.1),
             
             numericInput("interval_b", "Interval/Guess b:",
-                        value = 3, step = 0.1),
+                         value = 2, step = 0.1),
             
             sliderInput("tolerance", "Tolerance:",
-                       min = 1e-10, max = 1e-3, value = 1e-6),
+                        min = 1e-10, max = 1e-3, value = 1e-6),
             
             sliderInput("max_iter", "Maximum Iterations:",
-                       min = 10, max = 2000, value = 500, step = 10)
+                        min = 10, max = 2000, value = 500, step = 10)
           )
         ),
         
@@ -97,9 +97,9 @@ dashboardPage(
           box(
             width = 12,
             actionButton("run_algorithms", "Run All Algorithms", 
-                        icon = icon("play"),
-                        class = "btn-success btn-lg",
-                        width = "100%")
+                         icon = icon("play"),
+                         class = "btn-success btn-lg",
+                         width = "100%")
           )
         ),
         
@@ -189,7 +189,7 @@ dashboardPage(
             solidHeader = TRUE,
             status = "primary",
             selectInput("selected_algorithm", "Algorithm:",
-                       choices = NULL)
+                        choices = NULL)
           )
         ),
         
@@ -239,9 +239,9 @@ dashboardPage(
             h4("Implemented Algorithms:"),
             tags$ul(
               tags$li(strong("Root-Finding:"), 
-                     "Bisection, Newton-Raphson, Secant, Fixed-Point Iteration"),
+                      "Bisection, Newton-Raphson, Secant, Fixed-Point Iteration"),
               tags$li(strong("Optimization:"), 
-                     "Golden Section Search, Parabolic Interpolation, Brent's Method")
+                      "Golden Section Search, Parabolic Interpolation, Brent's Method")
             ),
             
             h4("Features:"),
