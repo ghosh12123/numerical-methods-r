@@ -99,13 +99,13 @@ Find where f(x) = 0.
 
 ```r
 # Define function
-f <- function(x) x^3 - 2*x - 5
+f <- function(x) x + cos(x)
 
 # Run all root-finding algorithms
-results <- solve_root(f, initial = c(1, 3))
+results <- solve_root(f, initial = c(-2, 2))
 
 # View comparison table
-comparison <- compare_all_methods(f, "root", c(1, 3))
+comparison <- compare_all_methods(f, "root", c(-2, 2))
 print(comparison)
 ```
 
@@ -113,16 +113,16 @@ print(comparison)
 
 ```r
 # Bisection Method - requires interval [a, b] where f(a) and f(b) have opposite signs
-result_bisection <- bisection_method(f, c(1, 3), tol = 1e-6, max_iter = 100)
+result_bisection <- bisection_method(f, c(-2, 2), tol = 1e-10, max_iter = 500)
 
 # Newton-Raphson - requires initial guess (derivative computed automatically)
-result_newton <- newton_raphson(f, x0 = 2, tol = 1e-6, max_iter = 100)
+result_newton <- newton_raphson(f, x0 = 0, tol = 1e-10, max_iter = 500)
 
 # Secant Method - requires two initial guesses
-result_secant <- secant_method(f, x0 = 1, x1 = 3, tol = 1e-6, max_iter = 100)
+result_secant <- secant_method(f, x0 = -2, x1 = 2, tol = 1e-10, max_iter = 500)
 
 # Fixed-Point Iteration - uses g(x) = x - f(x) by default
-result_fp <- fixed_point_iteration(f, x0 = 2, tol = 1e-6, max_iter = 100)
+result_fp <- fixed_point_iteration(f, x0 = 0, tol = 1e-10, max_iter = 500)
 ```
 
 ### Optimization
@@ -131,13 +131,13 @@ Find the minimum of f(x).
 
 ```r
 # Define function
-f <- function(x) (x - 3)^2 + 2
+f <- function(x) x^4 - 3*x^2 + 5
 
 # Run all optimization algorithms
-results <- solve_minimize(f, interval = c(0, 5))
+results <- solve_minimize(f, interval = c(-2, 2))
 
 # View comparison table
-comparison <- compare_all_methods(f, "minimize", c(0, 5))
+comparison <- compare_all_methods(f, "minimize", c(-2, 2))
 print(comparison)
 ```
 
@@ -145,13 +145,13 @@ print(comparison)
 
 ```r
 # Golden Section Search
-result_golden <- golden_section_search(f, c(0, 5), tol = 1e-6, max_iter = 100)
+result_golden <- golden_section_search(f, c(-2, 2), tol = 1e-10, max_iter = 500)
 
 # Parabolic Interpolation
-result_parabolic <- parabolic_interpolation(f, c(0, 5), tol = 1e-6, max_iter = 100)
+result_parabolic <- parabolic_interpolation(f, c(-2, 2), tol = 1e-10, max_iter = 500)
 
 # Brent's Method (hybrid golden + parabolic)
-result_brent <- brent_method(f, c(0, 5), tol = 1e-6, max_iter = 100)
+result_brent <- brent_method(f, c(-2, 2), tol = 1e-10, max_iter = 500)
 ```
 
 ## Launching the Shiny App
@@ -187,7 +187,7 @@ run_shiny_app()
 Each algorithm returns a result object containing:
 
 ```r
-result <- newton_raphson(f, x0 = 2)
+result <- newton_raphson(f, x0 = 0)
 
 # Access results
 result$algorithm        # Algorithm name
@@ -205,12 +205,6 @@ result$history          # Data frame of all iterations
 ```r
 # See step-by-step progress
 print(result$history)
-
-#   iteration        x          f_x         df_x
-# 1         1 2.000000  -1.00000000    10.000000
-# 2         2 2.100000   0.06100000    11.230000
-# 3         3 2.094568  -0.00018842    11.158588
-# 4         4 2.094551  -0.00000000    11.158271
 ```
 
 ### Plotting Convergence
@@ -220,7 +214,7 @@ print(result$history)
 plot_convergence(result)
 
 # Compare multiple algorithms
-results <- solve_root(f, c(1, 3))
+results <- solve_root(f, c(-2, 2))
 plot_comparison(results)
 ```
 
@@ -246,10 +240,10 @@ The interactive dashboard provides:
 
 ### Input Panel
 - **Problem Type:** Toggle between Root-Finding and Minimization
-- **Custom Function:** Enter any function of x (e.g., `x^3 - 2*x - 5`, `sin(x) - x/2`, `exp(-x) - x`)
+- **Custom Function:** Enter any function of x (e.g., `x^4 - 3*x^2 + 5`, `cos(x) + x`)
 - **Interval:** Set search bounds [a, b] / initial gusses (x0,x1)
-- **Tolerance:** Convergence tolerance (default: 1e-6)
-- **Max Iterations:** Iteration limit (default: 100)
+- **Tolerance:** Convergence tolerance (default: 1e-10)
+- **Max Iterations:** Iteration limit (default: 500)
 
 ### Results Panel
 - **Summary Table:** Side-by-side comparison of all algorithms showing status, final values, iterations, and convergence rate
@@ -327,4 +321,5 @@ Ishan Ghosh
 ## Acknowledgments
 
 Developed as part of Biostat 615 coursework on numerical methods and computational statistics.
+
 
