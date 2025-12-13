@@ -29,19 +29,27 @@ plot_convergence <- function(result) {
   
   # Single plot: Iteration vs |f(x)|
   p <- ggplot(history, aes(x = iteration, y = abs(f_x))) +
-    geom_line(color = "steelblue", size = 1) +
-    geom_point(color = "steelblue", size = 2) +
-    scale_y_log10() +
+    geom_point(color = "steelblue", size = 3) +
     theme_minimal() +
     labs(
       title = paste(result$algorithm, "- Convergence Plot"),
       subtitle = sprintf("Status: %s | Iterations: %d | Rate: %s",
-                        ifelse(result$converged, "Converged", result$message),
-                        result$iterations,
-                        result$convergence_rate),
+                         ifelse(result$converged, "Converged", result$message),
+                         result$iterations,
+                         result$convergence_rate),
       x = "Iteration",
       y = "|f(x)|"
     )
+  
+  # Only add line if more than 1 point
+  if (nrow(history) > 1) {
+    p <- p + geom_line(color = "steelblue", size = 1)
+  }
+  
+  # Only use log scale if we have positive values and more than 1 unique value
+  if (all(abs(history$f_x) > 0) && length(unique(abs(history$f_x))) > 1) {
+    p <- p + scale_y_log10()
+  }
   
   p
 }
@@ -83,9 +91,7 @@ plot_comparison <- function(results) {
   # Create convergence plot: iteration vs |f(x)|
   p <- ggplot(history_combined, aes(x = iteration, y = abs(f_x), 
                                     color = algorithm, group = algorithm)) +
-    geom_line(size = 1) +
     geom_point(size = 2) +
-    scale_y_log10() +
     theme_minimal() +
     labs(
       title = "Convergence Plot",
@@ -94,6 +100,21 @@ plot_comparison <- function(results) {
       color = "Algorithm"
     ) +
     theme(legend.position = "bottom")
+  
+  # Only add lines for algorithms with more than 1 point
+  algorithms_with_lines <- history_combined %>%
+    group_by(algorithm) %>%
+    filter(n() > 1) %>%
+    ungroup()
+  
+  if (nrow(algorithms_with_lines) > 0) {
+    p <- p + geom_line(data = algorithms_with_lines, size = 1)
+  }
+  
+  # Only use log scale if we have positive values
+  if (all(abs(history_combined$f_x) > 0)) {
+    p <- p + scale_y_log10()
+  }
   
   p
 }
@@ -956,11 +977,32 @@ plot_fixedpoint_animation <- function(result, f) {
     y_max <- view_x_max
   }
   
+  # Handle 1-iteration convergence case - show static plot
+  if (nrow(history) == 1) {
+    x_final <- history$x[1]
+    
+    p <- ggplot() +
+      geom_line(aes(x = x_grid, y = g_grid), color = "steelblue", size = 1) +
+      geom_line(aes(x = x_grid, y = x_grid), color = "gray50", size = 1, linetype = "dashed") +
+      geom_point(aes(x = x_final, y = x_final), color = "red", size = 4) +
+      coord_cartesian(xlim = c(view_x_min, view_x_max), ylim = c(y_min, y_max)) +
+      theme_minimal() +
+      labs(
+        title = "Fixed-Point Iteration: Converged in 1 Iteration",
+        subtitle = paste("Solution: x =", round(x_final, 6)),
+        x = "x",
+        y = "y"
+      )
+    
+    return(ggplotly(p) %>% config(modeBarButtonsToRemove = c('select2d', 'lasso2d')))
+  }
+  
   # Prepare animation data
   anim_data <- data.frame()
   
   # Show only current step's cobweb (no accumulation)
-  for (iter in 1:min(nrow(history) - 1, 20)) {  # Need at least one more point for cobweb
+  max_iters <- min(nrow(history) - 1, 20)
+  for (iter in 1:max_iters) {
     # g(x) curve
     g_curve_df <- data.frame(
       x = x_grid,
@@ -1907,26 +1949,26 @@ plot_brent_animation <- function(result, f) {
   p <- ggplot() +
     # Golden section interval (yellow)
     geom_polygon(data = subset(anim_data, element == "interval_golden"),
-                 aes(x = x, y = y, frame = iteration),
+                 aes(x = x, y = y, frame = iteration, group = iteration),
                  fill = "gold", alpha = 0.2) +
     # Parabolic interval (light purple)
     geom_polygon(data = subset(anim_data, element == "interval_parabolic"),
-                 aes(x = x, y = y, frame = iteration),
+                 aes(x = x, y = y, frame = iteration, group = iteration),
                  fill = "mediumpurple", alpha = 0.2) +
     # Function curve
     geom_line(data = subset(anim_data, element == "curve"),
-              aes(x = x, y = y, frame = iteration),
+              aes(x = x, y = y, frame = iteration, group = iteration),
               color = "steelblue", size = 1) +
     # Fitted parabola (when parabolic step)
     geom_line(data = subset(anim_data, element == "parabola"),
-              aes(x = x, y = y, frame = iteration, color = "Fitted Parabola"),
+              aes(x = x, y = y, frame = iteration, group = iteration, color = "Fitted Parabola"),
               size = 0.8, linetype = "dashed", na.rm = TRUE) +
     # Interval bounds
     geom_line(data = subset(anim_data, element == "left_bound"),
-              aes(x = x, y = y, frame = iteration, color = "Interval Bounds"),
+              aes(x = x, y = y, frame = iteration, group = iteration, color = "Interval Bounds"),
               size = 1.5, linetype = "solid") +
     geom_line(data = subset(anim_data, element == "right_bound"),
-              aes(x = x, y = y, frame = iteration, color = "Interval Bounds"),
+              aes(x = x, y = y, frame = iteration, group = iteration, color = "Interval Bounds"),
               size = 1.5, linetype = "solid", show.legend = FALSE) +
     # Bracket points used for parabola fitting
     geom_point(data = subset(anim_data, element == "bracket_points"),
