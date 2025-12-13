@@ -20,5 +20,6 @@ Imports:
     shiny,
     shinydashboard,
     plotly,
-    DT
+    DT,
+    numDeriv
 LazyData: true
